@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32630.192
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "clinlib", "clinlib\clinlib.csproj", "{88B19781-06B5-4E2A-B609-5187C221F118}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject1", "TestProject1\TestProject1.csproj", "{F32EFC11-8367-4546-A873-168221E0F24B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{88B19781-06B5-4E2A-B609-5187C221F118}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88B19781-06B5-4E2A-B609-5187C221F118}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88B19781-06B5-4E2A-B609-5187C221F118}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88B19781-06B5-4E2A-B609-5187C221F118}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F32EFC11-8367-4546-A873-168221E0F24B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F32EFC11-8367-4546-A873-168221E0F24B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F32EFC11-8367-4546-A873-168221E0F24B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F32EFC11-8367-4546-A873-168221E0F24B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A4E06721-CD4A-43E1-AA59-9BCF00D34BA4}
+	EndGlobalSection
+EndGlobal
