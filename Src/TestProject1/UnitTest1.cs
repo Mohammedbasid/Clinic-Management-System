@@ -33,11 +33,11 @@ namespace TestProject1
         }
 
         [Test]
-        public void viewAllPatients()
+        public void ValidatePatient()
         {
-            int actualValue = ihome.viewPatients().Count;
-            int expectedVal = 18;
-            Assert.AreEqual(expectedVal, actualValue);
+            bool actualValue = ihome.validatePatient("Kailash", "sridhar", "M", 21, "15/08/2001");
+            bool expectedValue = false;
+            Assert.AreEqual(expectedValue, actualValue);
         }
 
         [Test]
@@ -51,65 +51,65 @@ namespace TestProject1
         }
 
         [Test]
-        public void ValidatePatient()
+        public void viewAllPatients()
         {
-            bool actualValue = ihome.validatePatient("Kailash", "sridhar", "M", 21, "15/08/2001");
-            bool expectedValue = false;
-            Assert.AreEqual(expectedValue, actualValue);
-
+            int actualValue = ihome.viewPatients().Count;
+            int expectedVal = 2;
+            Assert.AreEqual(expectedVal, actualValue);
         }
 
+
         [Test]
-        public void alldocspec()
+        public void AllDoctorSpecalization()
         {
-            int actualValue = ischedappt.dispdocspec("Pediatrics").Count;
+            int actualValue = ischedappt.DisplayDoctorSpecialization("Pediatrics").Count;
             int expectedValue = 1;
             Assert.AreEqual(expectedValue, actualValue);
         }
 
         [Test]
-        public void getallslots()
+        public void GetAllSlots()
         {
-            int actualValue = ischedappt.dispallslotsfordoc(901,DateTime.Parse("30/08/2022")).Count();
+            int actualValue = ischedappt.DispAllSlotsforDoctor(901,DateTime.Parse("30/08/2022")).Count();
             int expectedValue = 1;
             Assert.AreEqual(expectedValue, actualValue);
         }
 
 
         [Test]
-        public void apptbooking()
+        public void AppointmentBooking()
         {
-            int actualValue = ischedappt.apptbooking(101,564);
+            int actualValue = ischedappt.AppointmentBooking(101,564);
             int expectedValue = 1;
             Assert.AreEqual(expectedValue, actualValue);
         }
 
         [Test]
-        public void valschedappt()
+        public void ValidateschedAppointment()
         {
-            bool actualValue = ischedappt.valschedappt(564, "Internal Medicine");
+            bool actualValue = ischedappt.ValidateSchedAppointment(564, "Internal Medicine");
             bool expectedValue = true;
             Assert.AreEqual(expectedValue, actualValue);
         }
 
         [Test]
-        public void valformatinddate()
+        public void ValidateFormatIndianDate()
         {
-            bool actualValue = ischedappt.valdateformat("29/11/2000");
+            bool actualValue = ischedappt.ValDateFormat("29/11/2000");
             bool expectedValue = true;
             Assert.AreEqual(expectedValue, actualValue);
         }
 
         [Test]
-        public void showapptofpatient()
+        public void ShowAppointmentsofPatients()
         {
-            int actualValue = icancsched.showapptsofpatient(564,DateTime.Parse("26/08/2022")).Count();
+            int actualValue = icancsched.ShowAppointmentsofPatients(564,DateTime.Parse("26/08/2022")).Count();
             int expectedValue = 1;
             Assert.AreEqual(expectedValue, actualValue);
         }
 
         [Test]
-        public void cancappt()
+        public void CancelAppointment()
         {
             int actualValue = icancsched.cancelAppt(101,564);
             int expectedValue = 1;
@@ -117,25 +117,29 @@ namespace TestProject1
         }
 
         [Test]
-        public void valapid()
+        public void ValidateAppointmentId()
         {
-            List<int> list = new List<int>() { 101};
-            bool actualValue = ischedappt.valapid(list,101);
+            List<int> list = new List<int>() {101};
+            bool actualValue = ischedappt.ValidateAppointmentId(list,101);
             bool expectedValue = true;
             Assert.AreEqual(expectedValue, actualValue);
         }
 
         [Test]
-        public void valdatelt()
+        public void ValDateLimit()
         {
-            bool actualValue = ischedappt.valdatelimit("10/09/2022");
+            bool actualValue = ischedappt.ValDateLimit("10/09/2022");
             bool expectedValue = true;
             Assert.AreEqual(expectedValue, actualValue);
         }
 
-
-
-
-
+        [Test]
+        public void ValidateDoctorId()
+        {
+            List<int> list = new List<int>() { 902 };
+            bool actualValue = ischedappt.ValidateDoctorId(902,list);
+            bool expectedValue = true;
+            Assert.AreEqual(expectedValue, actualValue);
+        }
     }
 }

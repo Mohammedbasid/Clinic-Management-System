@@ -8,9 +8,9 @@ namespace clinlib
 {
     public interface Icancsched
     {
-        public List<Appointment> showapptsofpatient(int patient_id, DateTime canceldate);
+        public List<Appointment> ShowAppointmentsofPatients(int patient_id, DateTime canceldate);
         public int cancelAppt(int apptid, int patient_id);
-        public bool patientidvalidation(int patient_id);
-        public bool valdateformat(string inddate);
+        public bool PatientIdValidation(int patient_id);
+        public bool ValDateFormat(string inddate);
     }
 }

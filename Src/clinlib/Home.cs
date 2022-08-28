@@ -12,21 +12,22 @@ namespace clinlib
     {
         List<Doctor> alldoctors = new List<Doctor>();
         List<Patient> allpatients = new List<Patient>();
-        static SqlConnection cnn;
-        static SqlCommand cmd;
-        static SqlCommand cmd1;
+        static SqlConnection Connection;
+        static SqlCommand Command;
+        static SqlCommand Command1;
         public static SqlConnection getConnection()
         {
-            cnn = new SqlConnection("Data Source =.; Initial Catalog" + " = Clinicmanagement; Integrated Security = True");
-            cnn.Open();
-            return cnn;
+            Connection = new SqlConnection("Data Source =.; Initial Catalog" + " = Clinicmanagement; Integrated Security = True");
+            Connection.Open();
+            return Connection;
         }
 
+        /* This Method Lists All Available Doctors */
         public List<Doctor> viewDoctors()
         {
-            cnn = getConnection();
-            cmd = new SqlCommand("select * from doctors",cnn);
-            SqlDataReader sdr = cmd.ExecuteReader();
+            Connection = getConnection();
+            Command = new SqlCommand("select * from doctors", Connection);
+            SqlDataReader sdr = Command.ExecuteReader();
             int doctor_id;
             string firstname;
             string lastname;
@@ -50,11 +51,12 @@ namespace clinlib
             return alldoctors;
         }
 
+        /* This Method Lists All Available Patients */
         public List<Patient> viewPatients()
         {
-            cnn = getConnection();
-            cmd = new SqlCommand("select * from patients", cnn);
-            SqlDataReader sdr = cmd.ExecuteReader();
+            Connection = getConnection();
+            Command = new SqlCommand("select * from patients", Connection);
+            SqlDataReader sdr = Command.ExecuteReader();
             int patient_id;
             string firstname;
             string lastname;
@@ -76,6 +78,7 @@ namespace clinlib
             return allpatients;
         }
 
+        /* This Method is Used to Validate the Patient Details */
         public bool validatePatient(string firstname, string lastname, string sex, int age, string dob)
         {
             string nameregex = "[^A-Za-z0-9]";
@@ -97,25 +100,25 @@ namespace clinlib
             return true;
         }
 
-
+        /* This Method is used to Add New Patients */
         public int addPatient(Patient p,out int patient_id)
         {
-            cnn = getConnection();
-            cmd = new SqlCommand("insert into patients(firstname,lastname,sex,age,dob) values(@firstname,@lastname,@sex,@age,@dob)");
-            cmd.Connection = cnn;
-            cmd.Parameters.AddWithValue("@firstname", p.firstname);
-            cmd.Parameters.AddWithValue("@lastname", p.lastname);
-            cmd.Parameters.AddWithValue("@sex", p.sex);
-            cmd.Parameters.AddWithValue("@age", p.age);
-            cmd.Parameters.AddWithValue("@dob", p.dob);
-            int ListPatient = cmd.ExecuteNonQuery();
-            cmd1 = new SqlCommand("select patient_id from patients where firstname=@firstname and lastname=@lastname and sex=@sex and age=@age and dob=@dob",cnn);
-            cmd1.Parameters.AddWithValue("@firstname", p.firstname);
-            cmd1.Parameters.AddWithValue("@lastname", p.lastname);
-            cmd1.Parameters.AddWithValue("@sex", p.sex);
-            cmd1.Parameters.AddWithValue("@age", p.age);
-            cmd1.Parameters.AddWithValue("@dob", p.dob);
-            SqlDataReader sdr =cmd1.ExecuteReader();
+            Connection = getConnection();
+            Command = new SqlCommand("insert into patients(firstname,lastname,sex,age,dob) values(@firstname,@lastname,@sex,@age,@dob)");
+            Command.Connection = Connection;
+            Command.Parameters.AddWithValue("@firstname", p.firstname);
+            Command.Parameters.AddWithValue("@lastname", p.lastname);
+            Command.Parameters.AddWithValue("@sex", p.sex);
+            Command.Parameters.AddWithValue("@age", p.age);
+            Command.Parameters.AddWithValue("@dob", p.dob);
+            int ListPatient = Command.ExecuteNonQuery();
+            Command1 = new SqlCommand("select patient_id from patients where firstname=@firstname and lastname=@lastname and sex=@sex and age=@age and dob=@dob", Connection);
+            Command1.Parameters.AddWithValue("@firstname", p.firstname);
+            Command1.Parameters.AddWithValue("@lastname", p.lastname);
+            Command1.Parameters.AddWithValue("@sex", p.sex);
+            Command1.Parameters.AddWithValue("@age", p.age);
+            Command1.Parameters.AddWithValue("@dob", p.dob);
+            SqlDataReader sdr = Command1.ExecuteReader();
             sdr.Read();
             patient_id = sdr.GetInt32(0);
             return ListPatient;

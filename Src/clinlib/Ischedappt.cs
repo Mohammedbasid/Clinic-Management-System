@@ -8,12 +8,13 @@ namespace clinlib
 {
     public interface Ischedappt
     {
-        public List<Doctor> dispdocspec(string docspec);
-        public List<Appointment> dispallslotsfordoc(int doctor_id,DateTime day);
-        public int apptbooking(int apptid, int patient_id);
-        public bool valschedappt(int patient_id, string docspec);
-        public bool valdateformat(string inddate);
-        public bool valapid(List<int> aid, int apptid);
-        public bool valdatelimit(string datelimit);
+        public bool ValidateSchedAppointment(int patient_id, string docspec);
+        public bool ValDateFormat(string inddate);
+        public bool ValDateLimit(string datelimit);
+        public List<Doctor> DisplayDoctorSpecialization(string docspec);
+        public bool ValidateDoctorId(int docter_id, List<int> docid);
+        public List<Appointment> DispAllSlotsforDoctor(int doctor_id,DateTime day);
+        public int AppointmentBooking(int apptid, int patient_id);
+        public bool ValidateAppointmentId(List<int> aid, int apptid);
     }
 }

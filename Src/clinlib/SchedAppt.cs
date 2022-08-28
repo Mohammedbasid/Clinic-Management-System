@@ -10,22 +10,23 @@ namespace clinlib
 {
     public class SchedAppt:Ischedappt
     {
-        static SqlConnection cnn;
-        static SqlCommand cmd;
+        static SqlConnection connection;
+        static SqlCommand command;
         private static SqlConnection getConnection()
         {
-            cnn = new SqlConnection("Data Source =.; Initial Catalog" +
+            connection = new SqlConnection("Data Source =.; Initial Catalog" +
                 " = Clinicmanagement; Integrated Security = True");
-            cnn.Open();
-            return cnn;
+            connection.Open();
+            return connection;
         }
 
-        public bool valschedappt(int patient_id,string docspec)
+        /* This Method is used to Validate the Appointment Schedule With Correct Specialization */
+        public bool ValidateSchedAppointment(int patient_id,string docspec)
         {
-            cnn = getConnection();
-            cmd = new SqlCommand("select * from patients where patient_id = @patient_id", cnn);
-            cmd.Parameters.AddWithValue("@patient_id",patient_id);
-            SqlDataReader sdr = cmd.ExecuteReader();
+            connection = getConnection();
+            command = new SqlCommand("select * from patients where patient_id = @patient_id", connection);
+            command.Parameters.AddWithValue("@patient_id",patient_id);
+            SqlDataReader sdr = command.ExecuteReader();
             if(!sdr.HasRows)
             {
                 throw new patientidexception("Patient ID does not exist.");
@@ -44,8 +45,8 @@ namespace clinlib
             return true;
         }
 
-
-        public bool valdateformat(string inddate)
+        /* This Method Checks Whether the date is in Indian Format or not */
+        public bool ValDateFormat(string inddate)
         {
             DateTime date;
             if (!DateTime.TryParseExact(inddate, "dd'/'MM'/'yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
@@ -54,15 +55,45 @@ namespace clinlib
             }
             return true;
         }
+        /* This Method Checks Whether the Entered Date is between the given Dates */
+        public bool ValDateLimit(string datelimit)
+        {
+            List<string> dl = new List<string>();
+            dl.Add("26/08/2022");
+            dl.Add("27/08/2022");
+            dl.Add("28/08/2022");
+            dl.Add("29/08/2022");
+            dl.Add("30/08/2022");
+            dl.Add("31/08/2022");
+            dl.Add("01/09/2022");
+            dl.Add("02/09/2022");
+            dl.Add("03/09/2022");
+            dl.Add("04/09/2022");
+            dl.Add("05/09/2022");
+            dl.Add("06/09/2022");
+            dl.Add("07/09/2022");
+            dl.Add("08/09/2022");
+            dl.Add("09/09/2022");
+            dl.Add("10/09/2022");
+            foreach (string s in dl)
+            {
+                if (datelimit.Equals(s))
+                {
+                    return true;
+                }
+            }
+            throw new DateLimitExceededException("Please Enter the date Between 26/08/2022 to 10/09/2022.");
+        }
 
-        public List<Doctor> dispdocspec(string docspec)
+        /* This Method Displays the Doctor Based on Specialization */
+        public List<Doctor> DisplayDoctorSpecialization(string docspec)
         {
             List<Doctor> Doct = new List<Doctor>();
 
-            cnn = getConnection();
-            cmd = new SqlCommand("select * from doctors where specialization = @specialization", cnn);
-            cmd.Parameters.AddWithValue("@specialization", docspec);
-            SqlDataReader sdr = cmd.ExecuteReader();
+            connection = getConnection();
+            command = new SqlCommand("select * from doctors where specialization = @specialization", connection);
+            command.Parameters.AddWithValue("@specialization", docspec);
+            SqlDataReader sdr = command.ExecuteReader();
             int doctor_id;
             string firstName;
             string lastName;
@@ -88,15 +119,30 @@ namespace clinlib
             return Doct;
         }
 
-        public List<Appointment> dispallslotsfordoc(int doctor_id,DateTime date)
+        /* This Method Checks Whether the given Doctor ID is Correct or Not  */
+        public bool ValidateDoctorId(int docter_id, List<int> docid)
+        {
+            if (docid.Contains(docter_id))
+            {
+                return true;
+            }
+            throw new DocIdException("The Given Doctor ID is not Under the Required Specialization or ID does not Exist.");
+        }
+
+        /* This Method Shows the Slots Available for the Doctor */
+        public List<Appointment> DispAllSlotsforDoctor(int doctor_id,DateTime date)
         {
             List<Appointment> appt = new List<Appointment>();
-            cnn = getConnection();
-            cmd = new SqlCommand("select * from appointments where doctor_id=@doctor_id and apptstatus='Available' and visitdate=@date");
-            cmd.Connection = cnn;
-            cmd.Parameters.AddWithValue("@doctor_id", doctor_id);
-            cmd.Parameters.AddWithValue("@date", date);
-            SqlDataReader sdr = cmd.ExecuteReader();
+            connection = getConnection();
+            command = new SqlCommand("select * from appointments where doctor_id=@doctor_id and apptstatus='Available' and visitdate=@date");
+            command.Connection = connection;
+            command.Parameters.AddWithValue("@doctor_id", doctor_id);
+            command.Parameters.AddWithValue("@date", date);
+            SqlDataReader sdr = command.ExecuteReader();
+            if(!sdr.HasRows)
+            {
+                throw new NoAppointmentAvailableException("No Appointment is Available on this Date for Required Specialization!");
+            }
             while(sdr.Read())
             {
                 appt.Add(new Appointment(sdr.GetInt32(0), sdr.GetInt32(1), sdr.GetDateTime(2), sdr.GetString(3), sdr.GetString(4)));
@@ -104,13 +150,14 @@ namespace clinlib
             return appt;
         }
 
-        public int apptbooking (int apptid,int patient_id)
+        /* This Method is to Book a slot for the Patient */
+        public int AppointmentBooking(int apptid,int patient_id)
         {
-            cnn = getConnection();
-            cmd = new SqlCommand("update appointments set apptstatus='Booked',patient_id =@patient_id where apptid=@apptid",cnn);
-            cmd.Parameters.AddWithValue("@apptid", apptid);
-            cmd.Parameters.AddWithValue("@patient_id", patient_id);
-            int apptbooked = cmd.ExecuteNonQuery();
+            connection = getConnection();
+            command = new SqlCommand("update appointments set apptstatus='Booked',patient_id =@patient_id where apptid=@apptid", connection);
+            command.Parameters.AddWithValue("@apptid", apptid);
+            command.Parameters.AddWithValue("@patient_id", patient_id);
+            int apptbooked = command.ExecuteNonQuery();
             if(apptbooked == 1)
             {
                 return apptbooked;
@@ -118,51 +165,23 @@ namespace clinlib
             throw new appointmentidexception("Appointment ID is not valid! Please enter a valid Appointment ID"); 
         }
 
-        public bool valapid(List<int> aid ,int apptid)
+        /* This Method Checks Whether the given Appointment ID is Correct or not */
+        public bool ValidateAppointmentId(List<int> aid, int apptid)
         {
             bool flag = false;
             foreach (int id in aid)
             {
-                if(apptid == id)
+                if (apptid == id)
                 {
                     flag = true;
                     break;
                 }
             }
-            if(flag==false)
+            if (flag == false)
             {
                 throw new appointmentidexception("Appointment ID Does not Exist.");
             }
             return true;
-        }
-
-        public bool valdatelimit(string datelimit)
-        {
-            List<string> dl = new List<string>();
-            dl.Add("26/08/2022");
-            dl.Add("27/08/2022");
-            dl.Add("28/08/2022");
-            dl.Add("29/08/2022");
-            dl.Add("30/08/2022");
-            dl.Add("31/08/2022");
-            dl.Add("01/09/2022");
-            dl.Add("02/09/2022");
-            dl.Add("03/09/2022");
-            dl.Add("04/09/2022");
-            dl.Add("05/09/2022");
-            dl.Add("06/09/2022");
-            dl.Add("07/09/2022");
-            dl.Add("08/09/2022");
-            dl.Add("09/09/2022");
-            dl.Add("10/09/2022");
-            foreach(string s in dl)
-            {
-                if(datelimit.Equals(s))
-                {
-                    return true;
-                }            
-            }
-            throw new DateLimitExceededException("Please Enter the date Between 26/08/2022 to 10/09/2022.");
         }
     }
 }

@@ -45,6 +45,14 @@ namespace clinlib
         }
     }
 
+    public class DocIdException : ApplicationException
+    {
+        public DocIdException(string message) : base(message)
+        {
+
+        }
+    }
+
     public class specializationexception : ApplicationException
     {
         public specializationexception(string message) : base(message)
@@ -69,6 +77,14 @@ namespace clinlib
         }
     }
 
+    public class NoAppointmentAvailableException : ApplicationException
+    {
+        public NoAppointmentAvailableException(string message) : base(message)
+        {
+
+        }
+    }
+
     public class DateLimitExceededException : ApplicationException
     {
         public DateLimitExceededException(string message) : base(message)
@@ -76,6 +92,4 @@ namespace clinlib
 
         }
     }
-
-
 }

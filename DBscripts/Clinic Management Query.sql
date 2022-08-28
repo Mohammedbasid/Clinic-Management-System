@@ -1,43 +1,51 @@
 use Clinicmanagement
 
+--creating users Table
+
 create Table users (username varchar(10) unique CONSTRAINT check_username check(username NOT LIKE '%[^a-zA-Z0-9]%'),
 first_name varchar(30),last_name varchar(30),password varchar(30) CONSTRAINT check_password check(password like '%@%'));
+
+--inserting the user Values
 
 insert into users values('Basid007','Basid','Safwan','basid@123')
 insert into users values('Deepak008','Deepak','Kumar','deepak@123')
 insert into users values('Santo009','Santo','Brighton','santo@123')
 insert into users values('Atul006','Atul','Lakka','atul@123')
 
+--Displaying all the users
 
+select * from users
 
+--Creating Doctors Table
 create table doctors (doctor_id int primary key, firstname varchar(20) constraint check_firstname check(firstname not like '%[^a-zA-Z0-9]%'), 
 lastname varchar(20) constraint check_lastname check(lastname not like '%[^a-zA-Z0-9]%'), 
 sex varchar(7), specialization varchar(50), visiting_from time,visiting_to time);
 
+--Inserting  Doctor Values
 insert into doctors values(901,'Terry','Cook','M','General','11:00','12:00');
 insert into doctors values(902,'Wanda','Bryant','F','Internal Medicine','9:00','11:00');
 insert into doctors values(903,'Steven','Reed','M','Pediatrics','14:00','17:00');
 insert into doctors values(904,'Alice','Cooper','F','Orthopedics','16:00','18:00');
 insert into doctors values(905,'Edward','Anderson','M','ophthalmology','08:00','09:00');
-truncate table doctors
+
+--To Display all the Doctors
+select * from doctors
 
 
+--Creating Patients Table
 create table patients (patient_id int identity(200,1) primary key, firstname varchar(20) constraint check_firstname_patient check(firstname not like '%[^a-zA-Z0-9]%'),
 lastname varchar(20) constraint check_lastname_patient check(lastname not like '%[^a-zA-Z0-9]%'), sex varchar(7),
 age int constraint check_age_patient check(age between 0 and 120), dob datetime)
 
-
-insert into patients values(123,'rahul','mahesh','M',24,'2000/10/29')
-select * from users
-select * from doctors
+--To Display all the Patients
 select * from patients
-truncate table patients
 
-
+--Creating Appointment Table
 create table appointments (apptid int identity(100,1) primary key,doctor_id int foreign key(doctor_id) 
 references doctors(doctor_id),visitdate date,appttime varchar(30),apptstatus varchar(30),patient_id int foreign key references patients(patient_id));
 
-select * from appointments
+
+--Inserting all the Appointment Slots from the date 26/08/2022 to 10/09/2022
 
 insert into appointments(doctor_id,visitdate,appttime,apptstatus,patient_id) values(901,'2022-08-26','11-12','Available',null);
 insert into appointments(doctor_id,visitdate,appttime,apptstatus,patient_id) values(902,'2022-08-26','09-10','Available',null);
@@ -200,6 +208,7 @@ insert into appointments(doctor_id,visitdate,appttime,apptstatus,patient_id) val
 insert into appointments(doctor_id,visitdate,appttime,apptstatus,patient_id) values(904,'2022-09-10','17-18','Available',null);
 insert into appointments(doctor_id,visitdate,appttime,apptstatus,patient_id) values(905,'2022-09-10','08-09','Available',null);
 
-
+--To Display all the Appointments
+select * from appointments
 
 

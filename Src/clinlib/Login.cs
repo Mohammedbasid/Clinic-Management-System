@@ -10,30 +10,29 @@ namespace clinlib
     
     public class Login : ILogin
     {
-        static SqlConnection cnn;
-        static SqlCommand cmd;
+        static SqlConnection connection;
+        static SqlCommand command;
 
         private SqlConnection getConnection()
         {
-            cnn = new SqlConnection("Data Source =.; Initial Catalog" + " = Clinicmanagement; Integrated Security = True");
-            cnn.Open();
-            return cnn;
+            connection = new SqlConnection("Data Source =.; Initial Catalog" + " = Clinicmanagement; Integrated Security = True");
+            connection.Open();
+            return connection;
         }
+        /*This Method is used for user Login*/
         public bool loginUser(string username, string password)
         {
-            cnn = getConnection();
-            cmd = new SqlCommand("select * from users where username=@username and password = @password");
-            cmd.Connection = cnn;
-            cmd.Parameters.AddWithValue("@username", username);
-            cmd.Parameters.AddWithValue("@password", password); 
-            SqlDataReader sdr = cmd.ExecuteReader();
+            connection = getConnection();
+            command = new SqlCommand("select * from users where username=@username and password=@password");
+            command.Connection = connection;
+            command.Parameters.AddWithValue("@username", username);
+            command.Parameters.AddWithValue("@password", password); 
+            SqlDataReader sdr = command.ExecuteReader();
             if (sdr.HasRows)
             {
                 return true;
             }
             throw new LoginException("Login Failed Please Enter a Valid username or password.");
-        }
-
-       
+        }       
     }
 }

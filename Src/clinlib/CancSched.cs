@@ -10,51 +10,52 @@ namespace clinlib
 {
     public  class CancSched : Icancsched
     {
-        static SqlConnection cnn;
-        static SqlCommand cmd;
+        static SqlConnection Connection;
+        static SqlCommand Command;
         private static SqlConnection GetConnection()
         {
-            cnn = new SqlConnection("Data Source =.; Initial Catalog" +
+            Connection = new SqlConnection("Data Source =.; Initial Catalog" +
                 " = Clinicmanagement; Integrated Security = True");
-            cnn.Open();
-            return cnn;
+            Connection.Open();
+            return Connection;
         }
 
-        public List<Appointment> showapptsofpatient(int patient_id, DateTime canceldate)
+        /* This Method Shows Appointments of Patients Based on PatientID and Date */
+        public List<Appointment> ShowAppointmentsofPatients(int patient_id, DateTime canceldate)
         {
             List<Appointment> appts = new List<Appointment>();
-            cnn = GetConnection();
-            cmd = new SqlCommand("select * from appointments where patient_id=@patient_id and visitdate=@canceldate", cnn);
-            cmd.Parameters.AddWithValue("@patient_id",patient_id);
-            cmd.Parameters.AddWithValue("@canceldate", canceldate);
-            SqlDataReader sdr = cmd.ExecuteReader();
+            Connection = GetConnection();
+            Command = new SqlCommand("select * from appointments where patient_id=@patient_id and visitdate=@canceldate", Connection);
+            Command.Parameters.AddWithValue("@patient_id",patient_id);
+            Command.Parameters.AddWithValue("@canceldate", canceldate);
+            SqlDataReader sdr = Command.ExecuteReader();
             while (sdr.Read())
             {
                 appts.Add(new Appointment(sdr.GetInt32(0),sdr.GetInt32(1),sdr.GetDateTime(2),sdr.GetString(3), sdr.GetString(4), sdr.GetInt32(5)));
             }
             return appts;
         }
-
+         /* This Method Cancels the Appointment */
         public int cancelAppt(int apptid,int patient_id)
         {
-            cnn = GetConnection();
-            cmd = new SqlCommand("update appointments set apptstatus='Available',patient_id=null where apptid=@apptid and patient_id=@patient_id",cnn);
-            cmd.Parameters.AddWithValue("@apptid",apptid);
-            cmd.Parameters.AddWithValue("@patient_id", patient_id);
-            int apptcancelled = cmd.ExecuteNonQuery();
+            Connection = GetConnection();
+            Command = new SqlCommand("update appointments set apptstatus='Available',patient_id=null where apptid=@apptid and patient_id=@patient_id",Connection);
+            Command.Parameters.AddWithValue("@apptid",apptid);
+            Command.Parameters.AddWithValue("@patient_id", patient_id);
+            int apptcancelled = Command.ExecuteNonQuery();
             if (apptcancelled == 1)
             {
                 return apptcancelled;
             }
             throw new appointmentidexception("Appointment ID not Valid");
         }
-
-        public bool patientidvalidation(int patient_id)
+        /*This Method Validates the Patient ID*/
+        public bool PatientIdValidation(int patient_id)
         {
-            cnn = GetConnection();
-            cmd = new SqlCommand("select * from patients where patient_id=@patient_id", cnn);
-            cmd.Parameters.AddWithValue("@patient_id", patient_id);
-            SqlDataReader sdr = cmd.ExecuteReader();
+            Connection = GetConnection();
+            Command = new SqlCommand("select * from patients where patient_id=@patient_id", Connection);
+            Command.Parameters.AddWithValue("@patient_id", patient_id);
+            SqlDataReader sdr = Command.ExecuteReader();
             if(sdr.HasRows)
             {
                 return true;
@@ -62,8 +63,8 @@ namespace clinlib
             throw new patientidexception("Enter a valid Patient ID.");
 
         }
-
-        public bool valdateformat(string inddate)
+        /* This Method Checks Whether the date is in Indian Format or not */
+        public bool ValDateFormat(string inddate)
         {
             DateTime date;
             if (!DateTime.TryParseExact(inddate, "dd'/'MM'/'yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
