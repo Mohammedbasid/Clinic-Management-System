@@ -11,7 +11,7 @@ namespace ClinicManagementClient
     {
         public static void Main()
         {
-            Console.WriteLine("****CLINIC MANAGEMENT SYSTEM****");
+            Console.WriteLine("****WELCOME TO CLINIC MANAGEMENT SYSTEM****");
             while (true)
             {
                 try
@@ -23,24 +23,25 @@ namespace ClinicManagementClient
                     Console.WriteLine("Enter the Password: ");
                     string password = Console.ReadLine();
                     Login log = new Login();
+                    iHome home = new Home();
                     log.loginUser(username, password);
-                    Console.WriteLine("----Login Successful----");
+                    Console.WriteLine("----  Login Successful!!!!!  ----");
                     Console.WriteLine();
                     Console.WriteLine("----Home Page----");
-                    iHome home = new Home();
                     Ischedappt isa = new SchedAppt();
                     Icancsched ics = new CancSched();
 
                     while (true)
                     {
-                        Console.WriteLine("1.View Doctors");
-                        Console.WriteLine("2.Add Patient");
-                        Console.WriteLine("3.Schedule Appointment");
-                        Console.WriteLine("4.Cancel Appointment");
-                        Console.WriteLine("5.Logout");
+                        Console.WriteLine("Press 1 to List All Doctors");
+                        Console.WriteLine("Press 2 to Add a new  Patient");
+                        Console.WriteLine("Press 3 to List All Patients");
+                        Console.WriteLine("Press 4 to Schedule a Appointment");
+                        Console.WriteLine("Press 5 to Cancel a Appointment");
+                        Console.WriteLine("Press 6 to Logout");
                         Console.WriteLine("Enter your Choice");
                         int ch = Convert.ToInt32(Console.ReadLine());
-                        if (ch == 5)
+                        if (ch == 6)
                         {
                             break;
                         }
@@ -49,12 +50,12 @@ namespace ClinicManagementClient
                             case 1:
                                 {
                                     List<Doctor> doc = home.viewDoctors();
+                                    Console.WriteLine("\t\t\t---Doctor Details---");
                                     foreach (Doctor dr in doc)
                                     {
-                                        Console.WriteLine("---Doctor Details---");
                                         Console.WriteLine($"Doctor ID : {dr.doctor_id} \nFirstName : {dr.firstname}\n" +
                                             $"LastName : {dr.lastname} \nSex : {dr.sex} \nSpecialization : {dr.specialization}" +
-                                            $"\nVisiting from : {dr.visiting_from} \nVisiting to : {dr.visiting_to}");
+                                            $"\nVisiting from : {dr.visiting_from} \nVisiting to : {dr.visiting_to} \n -------------------------------");
                                     }
                                     break;
                                 }   
@@ -81,12 +82,12 @@ namespace ClinicManagementClient
                                         int suc = home.addPatient(pt, out id);
                                         if (suc == 1)
                                         {
-                                            Console.WriteLine("Patient " + firstname + "" + lastname + " was inserted successfully");
-                                            Console.WriteLine("The patient id is :" + id);
+                                            Console.WriteLine("----- Patient " + firstname + "" + lastname + " was inserted successfully!!!! -----");
+                                            Console.WriteLine("The Patient ID is :" + id);
                                         }
                                         else
                                         {
-                                            Console.WriteLine("Patient is not inserted!!");
+                                            Console.WriteLine("Patient is not Inserted!!");
                                         }
                                     }
                                     catch(Exception ex)
@@ -97,12 +98,24 @@ namespace ClinicManagementClient
                                 }
                             case 3:
                                 {
+                                    List<Patient> pat = home.viewPatients();
+                                    Console.WriteLine("\t\t\t---Patient Details---");
+                                    foreach (Patient ps in pat)
+                                    {
+                                        Console.WriteLine($"Patient ID : {ps.patient_id} \nFirstName : {ps.firstname}\n" +
+                                            $"LastName : {ps.lastname} \nSex : {ps.sex} \nAge : {ps.age}" +
+                                            $"\nDate Of Birth : {ps.dob}\n -------------------------------");
+                                    }
+                                    break;
+                                }
+                            case 4:
+                                {
                                     try
                                     {
                                         Console.WriteLine("Enter the Patient ID: ");
                                         int patient_id = Convert.ToInt32(Console.ReadLine());
                                         Console.WriteLine("Enter the Available Specializations from the following: ");
-                                        Console.WriteLine("General \nInternal Medicine \nPediatrics \nOrthopedics \nOpthalmology");
+                                        Console.WriteLine("General \nInternal Medicine \nPediatrics \nOrthopedics \nOphthalmology");
                                         string docspec = Console.ReadLine();
                                         isa.valschedappt(patient_id,docspec);
                                         List<Doctor> doc = isa.dispdocspec(docspec);
@@ -113,23 +126,27 @@ namespace ClinicManagementClient
                                                 $"LastName : {d.lastname} \nSex : {d.sex} \nSpecialization : {d.specialization} " +
                                                 $"\nVisiting from : {d.visiting_from} \nVisiting to : {d.visiting_to}");
                                         }
-                                        Console.WriteLine("Enter the Date that you want to book the Appointment");
-                                        Console.WriteLine("26/08/2022\n27/08/2022\n28/08/2022\n29/08/2022\n30/08/2022\n31/08/2022");
+                                        Console.WriteLine("Enter the Date that you want to book the Appointment.");
+                                        Console.WriteLine("Book any Date from 26/08/2022 to 10/09/2022 : ");
                                         string ApptDate = Console.ReadLine();
+                                        isa.valdatelimit(ApptDate);
                                         isa.valdateformat(ApptDate);
                                         Console.WriteLine("Enter the Doctor ID: ");
                                         int docid = Convert.ToInt32(Console.ReadLine());
                                         DateTime dateofappointment = DateTime.Parse(ApptDate);
                                         List<Appointment> appt = isa.dispallslotsfordoc(docid, dateofappointment);
+                                        List<int> apid = new List<int>();
                                         Console.WriteLine("The Available Slots are: ");
                                         foreach (Appointment a in appt)
                                         { 
+                                            apid.Add(a.apptid);
                                             Console.WriteLine($"Appointment id : {a.apptid} \nDoctor id : {a.doctor_id}\n" +
                                                 $"Date : {a.visitdate} \nAppointment Time : {a.appttime} \nStatus : {a.apptstatus} " +
                                                 $"\nPatient id : {a.patient_id} ");
                                         }
                                         Console.WriteLine("Enter the Appointment ID");
                                         int appointmentId = Convert.ToInt32(Console.ReadLine());
+                                        isa.valapid(apid, appointmentId);
                                         isa.apptbooking(appointmentId,patient_id);
                                         Console.WriteLine("Appointment successfully booked for Patient ID " + patient_id);
                                         Console.WriteLine("Your Appointment ID is " + appointmentId);
@@ -140,7 +157,7 @@ namespace ClinicManagementClient
                                     }
                                     break;
                                 }
-                            case 4:
+                            case 5:
                                 {
                                     try
                                     {
@@ -149,9 +166,10 @@ namespace ClinicManagementClient
                                         int patient_id = Convert.ToInt32(Console.ReadLine());
                                         ics.patientidvalidation(patient_id);
                                         Console.WriteLine("The Available Dates for Cancellation are: ");
-                                        Console.WriteLine("26/08/2022 \n 27/08/2022 \n 28/08/2022 \n29/08/2022 \n 30/08/2022 \n 31/08/2022");
+                                        Console.WriteLine("26/08/2022 to 10/09/2022");
                                         Console.WriteLine("Enter the Date You Want to Cancel Appointment: ");
                                         string visitdate = Console.ReadLine();
+                                        isa.valdatelimit(visitdate);
                                         ics.valdateformat(visitdate);
                                         DateTime dt = Convert.ToDateTime(visitdate);
                                         List<Appointment> appt = ics.showapptsofpatient(patient_id, dt);

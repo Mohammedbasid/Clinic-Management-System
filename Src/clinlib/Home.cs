@@ -11,6 +11,7 @@ namespace clinlib
     public class Home : iHome
     {
         List<Doctor> alldoctors = new List<Doctor>();
+        List<Patient> allpatients = new List<Patient>();
         static SqlConnection cnn;
         static SqlCommand cmd;
         static SqlCommand cmd1;
@@ -47,6 +48,32 @@ namespace clinlib
                 alldoctors.Add(doc);
             }
             return alldoctors;
+        }
+
+        public List<Patient> viewPatients()
+        {
+            cnn = getConnection();
+            cmd = new SqlCommand("select * from patients", cnn);
+            SqlDataReader sdr = cmd.ExecuteReader();
+            int patient_id;
+            string firstname;
+            string lastname;
+            string sex;
+            int age;
+            DateTime dob;
+            while (sdr.Read())
+            {
+                patient_id = sdr.GetInt32(0);
+                firstname = sdr.GetString(1);
+                lastname = sdr.GetString(2);
+                sex = sdr.GetString(3);
+                age = sdr.GetInt32(4);
+                dob = sdr.GetDateTime(5);
+                Patient pt = new Patient(patient_id, firstname, lastname,
+                    sex, age, dob);
+                allpatients.Add(pt);
+            }
+            return allpatients;
         }
 
         public bool validatePatient(string firstname, string lastname, string sex, int age, string dob)

@@ -117,5 +117,52 @@ namespace clinlib
             }
             throw new appointmentidexception("Appointment ID is not valid! Please enter a valid Appointment ID"); 
         }
+
+        public bool valapid(List<int> aid ,int apptid)
+        {
+            bool flag = false;
+            foreach (int id in aid)
+            {
+                if(apptid == id)
+                {
+                    flag = true;
+                    break;
+                }
+            }
+            if(flag==false)
+            {
+                throw new appointmentidexception("Appointment ID Does not Exist.");
+            }
+            return true;
+        }
+
+        public bool valdatelimit(string datelimit)
+        {
+            List<string> dl = new List<string>();
+            dl.Add("26/08/2022");
+            dl.Add("27/08/2022");
+            dl.Add("28/08/2022");
+            dl.Add("29/08/2022");
+            dl.Add("30/08/2022");
+            dl.Add("31/08/2022");
+            dl.Add("01/09/2022");
+            dl.Add("02/09/2022");
+            dl.Add("03/09/2022");
+            dl.Add("04/09/2022");
+            dl.Add("05/09/2022");
+            dl.Add("06/09/2022");
+            dl.Add("07/09/2022");
+            dl.Add("08/09/2022");
+            dl.Add("09/09/2022");
+            dl.Add("10/09/2022");
+            foreach(string s in dl)
+            {
+                if(datelimit.Equals(s))
+                {
+                    return true;
+                }            
+            }
+            throw new DateLimitExceededException("Please Enter the date Between 26/08/2022 to 10/09/2022.");
+        }
     }
 }

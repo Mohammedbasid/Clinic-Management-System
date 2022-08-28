@@ -13,5 +13,7 @@ namespace clinlib
         public int apptbooking(int apptid, int patient_id);
         public bool valschedappt(int patient_id, string docspec);
         public bool valdateformat(string inddate);
+        public bool valapid(List<int> aid, int apptid);
+        public bool valdatelimit(string datelimit);
     }
 }

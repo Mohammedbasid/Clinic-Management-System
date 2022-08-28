@@ -9,6 +9,7 @@ namespace clinlib
     public interface iHome
     {
         public List<Doctor> viewDoctors();
+        public List<Patient> viewPatients();
 
         public int addPatient(Patient p,out int patient_id);
 

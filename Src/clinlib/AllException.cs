@@ -68,4 +68,14 @@ namespace clinlib
 
         }
     }
+
+    public class DateLimitExceededException : ApplicationException
+    {
+        public DateLimitExceededException(string message) : base(message)
+        {
+
+        }
+    }
+
+
 }

@@ -25,11 +25,19 @@ namespace TestProject1
         }
 
         [Test]
-        public void GetAllDoctors()
+        public void viewAllDoctors()
         {
             int actualValue = ihome.viewDoctors().Count;
             int expectedVal = 5;
             Assert.AreEqual(expectedVal,actualValue);
+        }
+
+        [Test]
+        public void viewAllPatients()
+        {
+            int actualValue = ihome.viewPatients().Count;
+            int expectedVal = 18;
+            Assert.AreEqual(expectedVal, actualValue);
         }
 
         [Test]
@@ -107,6 +115,24 @@ namespace TestProject1
             int expectedValue = 1;
             Assert.AreEqual(expectedValue, actualValue);
         }
+
+        [Test]
+        public void valapid()
+        {
+            List<int> list = new List<int>() { 101};
+            bool actualValue = ischedappt.valapid(list,101);
+            bool expectedValue = true;
+            Assert.AreEqual(expectedValue, actualValue);
+        }
+
+        [Test]
+        public void valdatelt()
+        {
+            bool actualValue = ischedappt.valdatelimit("10/09/2022");
+            bool expectedValue = true;
+            Assert.AreEqual(expectedValue, actualValue);
+        }
+
 
 
 
